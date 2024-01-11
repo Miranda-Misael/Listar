@@ -1,0 +1,141 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Asistencias</h1>
+
+{% for asistencia in asistencias %}
+    <div>
+        <h1>{{asistencia.idJor.titulo}}</h1>
+    </div>
+    <div>
+        <h1>{{asistencia.idJug.apodo}}</h1>
+    </div>
+
+{% endfor %}
+
+{{asistencias}}
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <h2>Edición de Curso</h2>
+        <div class="card">
+            <div class="card-body">
+                <form action="/editarCurso/" method="POST">{% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" id="txtCodigo" name="txtCodigo" value="{{curso.codigo}}" class="form-control" placeholder="Código"
+                            minlength="6" maxlength="6" readonly required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="txtNombre" name="txtNombre" value="{{curso.nombre}}" class="form-control" placeholder="Nombre"
+                            maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="numCreditos" name="numCreditos" value="{{curso.creditos}}" class="form-control" min="1" max="9"
+                            value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-info">
+    <a class="navbar-brand" href="#">Universidad</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contacto</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<td><a href="" class="btn btn-secondary">🗑</a> </td>
+<td><a href="" class="btn btn-secondary">🚷</a> </td>
+<tbody>    
+    {% if AsistT.tipoSoc_id == 1 %}
+    <tr>
+        {% if loop.previtem is defined or AsistT.idDiv != loop.previtem.idDiv %}
+            <td>Jugadores</td>
+        {% else %}
+            <td>{{ AsistT.totalAsist }}</td><!-- Agrega más celdas para "totales del siguiente registro" -->
+        {% endif %}
+    </tr>
+
+    {% elif AsistT.tipoSoc_id == 2 %}
+    <tr>
+        {% if loop.previtem is defined or AsistT.idDiv != loop.previtem.idDiv %}
+            <td>Profes</td>
+        {% else %}
+            <td>{{ AsistT.totalAsist }}</td><!-- Agrega más celdas para "totales del siguiente registro" -->
+        {% endif %}
+    </tr>
+    
+    
+    {% elif AsistT.tipoSoc_id == 3 %}
+    <tr>
+        {% if loop.previtem is not defined or AsistT.idDiv != loop.previtem.idDiv %}
+            <td>Managers</td>
+        {% else %}
+            <td>{{ AsistT.totalAsist }}</td><!-- Agrega más celdas para "totales del siguiente registro" -->
+        {% endif %}
+    </tr>
+    {% if  AsistT.tipoSoc_id != loop.previtem.tipoSoc_id %}
+        
+    {% elif AsistT.tipoSoc_id == 4 %}
+    <tr>
+        {% if loop.previtem is not defined or AsistT.idDiv != loop.previtem.idDiv %}
+            <td>PF</td>
+        {% else %}
+            <td>{{ AsistT.totalAsist }}</td><!-- Agrega más celdas para "totales del siguiente registro" -->
+        {% endif %}
+    </tr>
+    {% endif %}  
+{% endif %}
+{% endfor %}  
+</tbody>
+
+{% endblock %}
+
+
+
+{% if AsistT.tipoSoc_id == 1 %}
+                                        <tr>
+                                                <td>{{ AsistT.totalAsist }}</td><!-- Agrega más celdas para "totales del siguiente registro" -->
+                                                                                   </tr>
+
+                                        {% elif AsistT.tipoSoc_id == 2 %}
+                                        <tr>
+                                                <td>{{ AsistT.totalAsist }}</td>
+                                        
+                                        {% elif AsistT.tipoSoc_id == 3 %}
+                                        <tr>
+                                                <td>{{ AsistT.totalAsist }}</td><!-- Agrega más celdas para "totales del siguiente registro" -->
+                                           </tr>
+                                        
+                                            
+                                        {% elif AsistT.tipoSoc_id == 4 %}
+                                        <tr>
+                                                <td>{{ AsistT.totalAsist }}</td><!-- Agrega más celdas para "totales del siguiente registro" -->
+                                         </tr>
+                                        {% endif %}  
+                                    {% endif %}
+
+
+                                    {% if loop.previtem is not defined or AsistT.tipoSoc != loop.previtem.tipoSoc %}
+                                                <td>Jugadores</td>
+                                                {% endif %}                                            
+                                                

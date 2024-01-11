@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1 class="text-center"></h1>
+
+<div class="container">
+    <div class="card text-bg-secondary col-md-4 offset-md-4 p-3 " >
+        <h3 class="card-header">Modificar Asistencia</h3>
+        <h5 class="card-title"></h5>
+        <div class="card-body">
+            <form id="jornada_form" method="post">
+                {%csrf_token%}
+                {# CSRF token missing. es una validacion para que no puedan copiar el form de otro lado y envien info#}
+                {{form.as_p}}
+            
+            <button class="btn btn-success btn-sm me-md-2 justify-content-md-end">
+            Modificar
+            </button>
+            </form>
+            {# as_p es como poner p en html #}
+    
+        </div>
+            
+
+
+        
+    
+    </div>
+    
+    
+    
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Obtener los elementos relevantes
+    var tituloField = $("#id_titulo");
+    var tipoJorField = $("#id_tipoJor");
+    var fechaJorField = $("#id_fechaJor");
+
+    // Función para formatear el día de la semana
+    function formatearFecha() {
+        var tipoJorId = tipoJorField.val();
+        if (tipoJorId === "1") {  // Supongamos que "Entrenamiento" tiene el ID 1
+            // Deshabilitar el campo y establecer el valor predeterminado
+            // tituloField.attr("disabled", true);
+            var fecha = new Date(fechaJorField.val());
+            fecha.setDate(fecha.getDate() + 1);  // Sumar un día a la fecha
+            var options = { weekday: 'long' };
+            var diaSemana = new Intl.DateTimeFormat('es-ES', options).format(fecha);
+            tituloField.val(diaSemana);  // Mostrar el día de la semana
+        } else {
+            // Habilitar el campo
+            tituloField.removeAttr("disabled");
+        }
+    }
+
+    // Manejar cambios en el campo tipoJor y fechaJor
+    tipoJorField.change(formatearFecha);
+    fechaJorField.change(formatearFecha);
+
+    // Ejecutar la función al cargar la página
+    formatearFecha();
+});
+</script>
+
+
+
+{% endblock %}
+
+
+    

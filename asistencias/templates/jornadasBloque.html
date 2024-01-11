@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Template</title>
+    <style>
+        .contenedor-texto {
+            white-space: nowrap;  /* Evita que el texto se divida en varias líneas */
+            overflow: hidden;     /* Oculta el texto que desborda el contenedor */
+        }
+
+        .texto-con-movimiento {
+            display: inline-block;
+            animation: scroll 20s linear infinite;  /* Agrega un desplazamiento lineal de 20 segundos de duración */
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(100%); }  /* Inicia el desplazamiento desde la derecha */
+            100% { transform: translateX(-100%); }  /* Desplazamiento hacia la izquierda */
+        }
+    </style>
+
+<h1>Asistencias del Bloque </h1>
+
+<div class="container my-3">
+    <div class="row">
+        {% for jornada in jornadas %}
+        
+        <div class="col-sm-3 mb-3">
+
+            <div class="card text-bg-secondary mb-3">
+                <!--h5 class="card-header">{{ jornada.fechaJor|date:"Y-m-d" }} - {{jornada.tipoJor}}</h5-->
+                <h7 class="card-header">{{ jornada.fechaJor|date:"Y-m-d" }} - {{ jornada.tipoJor }} - {{ jornada.pk }}
+                </h7>
+                <h5 class="card-title"> - {{ jornada.titulo }}</h5>
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <table class=" small table-bordered">
+                            <thead>
+                                <tr class="text-center small">
+                                    <th class="small"></th>
+                                    <th class="small">Σ</th>
+                                    <th class="small">M6</th>
+                                    <th class="small">M7</th>
+                                    <th class="small">M8</th>
+                                    <th class="small">M9</th>
+                                    <th class="small">M10</th>
+                                    <th class="small">M11</th>
+                                    <th class="small">M12</th>
+                                    <th class="small">M13</th>
+                                    <th class="small">M14</th>
+                                </tr>
+                            </thead>
+                               
+                            <tbody>    
+                                <tr>
+                                    <td class="small">Jug</td>
+                                    <td class="text-center small">{{ totalJug|get_item:jornada.pk }}</td>
+                                    {% for AsistT in asistencias_totals %}
+                                        {% if AsistT.idJor_id == jornada.pk %}
+                                            {% if AsistT.tipoSoc_id == 1 %}
+                                                <td class="text-center">{{ AsistT.totalAsist }}</td>
+                                            {% endif %}  
+                                        {% endif %}
+                                    {% endfor %}  
+                                </tr>
+                                <tr>
+                                    <td class="small">Pfe</td>
+                                    <td class="text-center">{{ totalPfe|get_item:jornada.pk }}</td>
+                                    {% for AsistT in asistencias_totals %}
+                                        {% if AsistT.idJor_id == jornada.pk %}
+                                            {% if AsistT.tipoSoc_id == 2 %}
+                                                <td class="text-center">{{ AsistT.totalAsist }}</td>
+                                            {% endif %}  
+                                        {% endif %}
+                                    {% endfor %}  
+                                </tr>
+                                <tr>
+                                    <td class="small">Mgs</td>
+                                    <td class="text-center">{{ totalMgr|get_item:jornada.pk }}</td>
+                                    {% for AsistT in asistencias_totals %}
+                                        {% if AsistT.idJor_id == jornada.pk %}
+                                            {% if AsistT.tipoSoc_id == 3 %}
+                                                <td class="text-center">{{ AsistT.totalAsist }}</td>
+                                            {% endif %}  
+                                        {% endif %}
+                                    {% endfor %}  
+                                </tr>
+                                <tr>
+                                    <td class="small">PF</td>
+                                    <td class="text-center">{{ totalPF|get_item:jornada.pk }}</td>
+                                    {% for AsistT in asistencias_totals %}
+                                        {% if AsistT.idJor_id == jornada.pk %}
+                                            {% if AsistT.tipoSoc_id == 4 %}
+                                                <td class="text-center">{{ AsistT.totalAsist }}</td>
+                                            {% endif %}  
+                                        {% endif %}
+                                    {% endfor %}  
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <div class="contenedor-texto">
+
+                                <h8>
+                                    <div class="texto-con-movimiento">
+                                        {{ jornada.obs }}
+                                    </div>
+                                    
+                                </h8>
+                            </div>        <tr>
+                                            <td colspan="10"><a href="{% url 'elimJornada' jornada.id %}" class="btn btn-danger btn-sm me-md-2 justify-content-md-end btnEliminacion"> Eliminar</a><!--/td>
+                                            <td colspan="5"--><a href="{% url 'modJornada' jornada.id %}" class="btn btn-success btn-sm me-md-2 justify-content-md-end"> Modificar</a></td>
+                                        </tr>
+                            </tfoot>
+                               
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    (function () {
+
+const btnEliminacion = document.querySelectorAll(".btnEliminacion");
+
+btnEliminacion.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const confirmacion = confirm('¿Seguro de eliminar la Asistencia?');
+        if (!confirmacion) {
+            e.preventDefault();
+        }
+    });
+});
+
+})();
+</script>
+
+{% endblock %}<!--script scr="{% static 'js\Eliminar.js' %}"></script>

@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+    <h2 class="text-uppercase"> {{jornada}} </h2>
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 my-3">
+            <div class="card">
+                <h4 class="card-header text-center">Nuevo Participante
+                </h4>
+                        <div class="card">
+                            <div class="card-body py-2 ">
+                                <form action="{% url 'regJugador' jornada.id %} " method="POST">{% csrf_token %}
+                                    <div class="table-responsive ">
+                                        <table class="table form-control"">
+                                            <tbody>
+                                                <tr>
+                                                    <td rowspan="3" class="align-middle"> 
+                                                        <button type="submit" class="btn btn-block btn-primary text-white">Agregar</button>
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="txtApodo" name="txtApodo" class="form-control" placeholder="Apodo + Apellido" maxlength="30" required>
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select id="tipoSocio" name="tipoSocio" class="form-control">
+                                                            {% for tipo_socio in tipos_socio %}
+                                                                <option value="{{ tipo_socio.id }}">{{ tipo_socio.descrp }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                            <input type="text" id="txtdu" name="txtdu" class="form-control"
+                                                                placeholder="DNI" maxlength="30" required>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                                                            <label class="form-check-label" for="flexSwitchCheckChecked">Valida DNI</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+
+            </div><!--Cierra card-->
+
+        </div> <!--Cierra col-->
+
+
+        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 my-3">
+            <div class="card">
+                <h4 class="card-header text-center">Listado </h4>
+                <div class="table-responsive py-2">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Eliminar</th>
+                                <th>Editar</th>
+                                <th>Jugador</th>
+                                <th>Asiste</th>
+                                <th>Tarde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asistencia in asistencias %}
+                            {% if not asistencia.presente and not asistencia.tarde %}
+                          
+                            <tr>
+                                <td>{% if not asistencia.idJug.dniValidado %}<a href="" class="btn btn-outline-danger">✘</a>{% endif %}</td>
+                                <td><a href="{% url 'editJugador' asistencia.pk %}" class="btn btn-outline-success"> 🖊 </a> </td>
+                                <td>{{asistencia.idJug.apodo}} 
+                                    {% if asistencia.idJug.tipoSocio.id == 2 %}
+                                    (Pfe)
+                                    {% elif asistencia.idJug.tipoSocio.id == 3 %}
+                                    (Mgr)
+                                    {% elif asistencia.idJug.tipoSocio.id == 4 %}
+                                    (PF)
+                                    {% endif %}
+                                </td>
+                                <td><a href="{% url 'mod_presente' asistencia.id %}" class="btn btn-light">✋</a></td>
+                                
+                                <td><a href="{% url 'mod_presente_tarde' asistencia.id %}" class="btn btn-light">⌛</a></td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div><!--Cierra card-->
+        </div>
+
+
+        
+
+        
+            <!--h1>Listado de Jugadores</h1-->
+            
+        
+        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 my-3">
+            <div class="card">
+                <h4 class="card-header text-center">Jugadores Presentes {{ asistencias_presentes }}</h4>
+                    <div class="table-responsive py-2">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Eliminar</th>
+                                    <th>Editar</th>
+                                    <th>Jugador</th> 
+                                    <th></th>                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for asistencia in asistencias %}
+                                {% if asistencia.presente and not asistencia.tarde and asistencia.idJug.tipoSocio.id == 1 %}
+                                
+                                <tr >
+                                    <td>{% if not asistencia.idJug.dniValidado %}<a href="" class="btn btn-danger">✘</a>{% endif %}</td>                                
+                                    <td> </td>
+                                    <td>{{asistencia.idJug.apodo}}</td>
+                                    <td><a href="{% url 'mod_presente' asistencia.id %}" class="btn btn-light">↩</a> </td>
+                                
+                                </tr>
+                            
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>        
+            </div><!--Cierra card-->        
+        </div><!--cierra el COLl-->
+    </div><!--cierra el row-->
+    <div class="row">
+    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 my-3">
+        <div class="card">
+            <h4 class="card-header text-center">Llegaron Tarde </h4>
+                <div class="table-responsive py-2">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Eliminar</th>
+                                <th>Editar</th>
+                                <th>Jugador</th> 
+                                <th></th>                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asistencia in asistencias %}
+                            {% if asistencia.tarde and asistencia.idJug.tipoSocio.id == 1 %}
+                            
+                            <tr >
+                                <td>{% if not asistencia.idJug.dniValidado %}<a href="" class="btn btn-danger">✘</a>{% endif %}</td>                                
+                                <td> </td>
+                                <td>{{asistencia.idJug.apodo}}</td>
+                                <td><a href="{% url 'mod_presente_tarde' asistencia.id %}" class="btn btn-light">↩</a> </td>
+                            
+                            </tr>
+                        
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>        
+        </div><!--Cierra card-->        
+    </div><!--cierra el COLl-->
+    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 my-3">
+        <div class="card">
+            <h4 class="card-header text-center">Profes</h4>
+                <div class="table-responsive py-2">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Eliminar</th>
+                                <th>Editar</th>
+                                <th>Jugador</th> 
+                                <th></th>                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asistencia in asistencias %}
+                            {% if not asistencia.idJug.tipoSocio.id == 1 and asistencia.presente %}
+                            
+                            <tr >
+                                <td>{% if not asistencia.idJug.dniValidado %}<a href="" class="btn btn-outline-danger">✘</a>{% endif %}</td>                                
+                                <td> </td>
+                                <td>{{asistencia.idJug.id}} {{asistencia.idJug.apodo}}</td>
+                                <td>{% if asistencia.tarde  %}
+                                    <a href="{% url 'mod_presente_tarde' asistencia.id %}" class="btn btn-light">↩</a> 
+                                    {% else %}
+                                    <a href="{% url 'mod_presente' asistencia.id %}" class="btn btn-light">↩</a> 
+                                    {% endif %}
+                                </td>
+                            
+                            </tr>
+                        
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>        
+        </div><!--Cierra card-->        
+    </div><!--cierra el COLl-->
+</div><!--cierra el row-->
+</div><!--Cierra Container-->
+<!--Aclaraciones-->
+<div><h6>Validad DNI, unicamente se podra agregar siempre y cuando no exista dni en tabla socios</h6></div>
+<div><h6>se puede eliminar solo si no tiene cargado datos spersonales, ingresando por editar se podria desactivar</h6></div>
+    {% endblock %}

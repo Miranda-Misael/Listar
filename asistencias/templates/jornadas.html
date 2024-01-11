@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Template</title>
+    <style>
+        .contenedor-texto {
+            white-space: nowrap;  /* Evita que el texto se divida en varias líneas */
+            overflow: hidden;     /* Oculta el texto que desborda el contenedor */
+        }
+
+        .texto-con-movimiento {
+            display: inline-block;
+            animation: scroll 20s linear infinite;  /* Agrega un desplazamiento lineal de 20 segundos de duración */
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(100%); }  /* Inicia el desplazamiento desde la derecha */
+            100% { transform: translateX(-100%); }  /* Desplazamiento hacia la izquierda */
+        }
+    </style>
+
+<h1>Asistencias </h1>
+<div class="container my-3">
+    <div class="row">
+        {% for jornada in jornadas %}
+
+
+        <div class="col-lg-3">
+
+            <div class="card text-bg-secondary mb-3">
+                <!--h5 class="card-header">{{ jornada.fechaJor|date:"Y-m-d" }} - {{jornada.tipoJor}}</h5-->
+                <h7 class="card-header">{{ jornada.fechaJor|date:"Y-m-d" }} - {{ jornada.tipoJor }} - {{ jornada.pk }}
+                </h7>
+                <h5 class="card-title"> - {{ jornada.titulo }}</h5>
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <table class="table-bg-secondary">
+                            <tbody>
+                                {% for AsistT in asistencias_totals %}
+                                <!--h1>{{ AsistT.idJor_id }} == {{ jornada.pk }}</h1-->
+                                {% if AsistT.idJor_id == jornada.pk %}
+                                {% if AsistT.tipoSoc_id == 1 %}
+                                <tr>
+                                    <td>Jugadores</td>
+                                    <td>{{ AsistT.totalAsist }}</td>
+                                    <td></td>
+                                </tr>
+                                {% elif AsistT.tipoSoc_id == 2 %}
+                                <tr>
+                                    <td>Profes</td>
+                                    <td>{{ AsistT.totalAsist }}</td>
+                                    <td></td>
+                                </tr>
+                                {% elif AsistT.tipoSoc_id == 3 %}
+                                <tr>
+                                    <td>Managers</td>
+                                    <td>{{ AsistT.totalAsist }}</td>
+                                    <td></td>
+                                </tr>
+                                {% elif AsistT.tipoSoc_id == 4 %}
+                                <tr>
+                                    <td>PF</td>
+                                    <td>{{ AsistT.totalAsist }}</td>
+                                    <td><a href="{% url 'asistencias_detalle' jornada.id %}"
+                                            class="btn btn-primary btn-sm me-md-2 justify-content-md-end"> Tomar
+                                            Asistencia</a></td>
+                                </tr>
+                                {% endif %}
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <div class="contenedor-texto">
+
+                                    <h8>
+                                        <div class="texto-con-movimiento">
+                                            {{ jornada.obs }}
+                                        </div>
+                                        
+                                    </h8>
+                                
+                                </div>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!--cada tarjeta de jornada. Puedes hacerlo de esta manera:
+htmlCopy code..-->
+<!--h1>Jornadas</h1>
+<div class="container my-3">
+    <div class="row"> {% for jornada in jornadas %} <div class="col-sm-3 mb-3">
+            <div class="card text-bg-dark mb-3">
+                <h5 class="card-header">{{jornada.fechaJor}}</h5>
+                <div class="card-body">
+                    <h5 class="card-title">{{jornada.titulo}}</h5>
+                    <div></div>
+                    <div class="card-text">Jugadores</div>
+                    <div class="card-text">Profes</div>
+                    <div class="card-text">Manager</div>
+                    <div class="card-text">PF</div>
+                </div>
+            </div>
+            <div class="text-center"> <a href="{% url 'asistencias_detalle' jornada.id %}"
+                    class="btn btn-secondary">Tomar Asistencia</a> </div>
+            <div class="text-right"> Jugadores Asistentes: {{ jornada.num_asistencias }} </div>
+        </div> {% endfor %} </div>
+</div-->
+
+
+
+
+{% endblock %}
+

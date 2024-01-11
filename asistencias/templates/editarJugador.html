@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %} 
+
+
+
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            
+            <div class="card">
+    <h2 class="card-header text-center">Modificar Apodo</h2>
+    <div class="card-body">
+        <form action="{% url 'modJugador' %}" method="POST">{% csrf_token %}
+            <table class="table">
+                <tr>
+                    <td>
+                        
+                            <label for="txtApodo">Apodo:</label></td><td>
+                            <input type="text" id="txtApodo" name="txtApodo" value="{{jugador.apodo}}" class="form-control" maxlength="30" required>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        
+                            <label for="txtapellido">Apellido:</label></td><td> 
+                            <input type="text" id="txtapellido" name="txtapellido" value="{{jugador.apellido}}" class="form-control" readonly onmousedown="return false;">
+                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="txtSoc">Tipo Socio:</label></td><td>
+                        <select id="tipoSocio" name="tipoSocio" class="form-control">
+                            {% for tipo_socio in tipos_socio %}
+                                <option value="{{ tipo_socio.id }}">{{ tipo_socio.descrp }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="txtdiv">División:</label>
+                    </td>
+                    <td>
+                        <select id="txtdiv" name="txtdiv" class="form-control">
+                            {% for tipo_Div in tipos_Div %}
+                                <option value="{{ tipo_Div.id }}" {% if tipo_Div.id == jugador.idDiv.id %}selected{% endif %}>{{ tipo_Div.descrp }}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- Opción para mantener el input text (si decides volver a usarlo en el futuro) -->
+                        <!--input type="text" id="txtdiv" name="txtdiv" value="{{jugador.div}}" class="form-control" required-->
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                            <div class="input-group mb-3">
+                                <div class="input-group-text">
+                                  <input name="txtEntrena" id="txtEntrena" class="form-check-input mt-0" type="checkbox" value="True" aria-label="Checkbox for following text input" {% if jugador.entrena %}checked{% endif %}>
+                                </div>
+                                <input type="text" class="form-control" value="Entrena actualmente?" readonly>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="form-group">
+                            <input type="hidden" id="txtIdAs" name="txtIdAs" value="{{asistencia.id}}" class="form-control" readonly required>
+                            <input type="hidden" id="txtId" name="txtId" value="{{jugador.id}}" class="form-control" readonly required>
+                        </div>
+                
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
